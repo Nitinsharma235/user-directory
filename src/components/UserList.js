@@ -1,4 +1,3 @@
-import React from 'react'
 import UserCard from './UserCard'
 import { ThemeContext } from './ThemeContext'
 import { useContext } from 'react'
@@ -14,7 +13,7 @@ const UserList = ({userList = []}) => {
         userList.map((user) => {
             return (
               <div className={isDarkMode ? 'dark-theme column' : 'light-theme column'}>
-                  <UserCard user={user} isDarkMode={isDarkMode}/>
+                  <UserCard user={user} />
               </div> 
             )
         })
@@ -25,7 +24,6 @@ const UserList = ({userList = []}) => {
 }
 
 export default UserList
-
 
 
 

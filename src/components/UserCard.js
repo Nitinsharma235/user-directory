@@ -1,15 +1,15 @@
-import React from 'react'
+import { useContext } from 'react';
+import { ThemeContext } from './ThemeContext';
+const UserCard = ({user}) => {  
+  const { isDarkMode } = useContext(ThemeContext);
 
-const UserCard = ({user}) => {
   return (
         
-    <div>
+    <div className={isDarkMode ? 'dark-theme user-grid' : 'light-theme user-grid'} >
       <span><img className= "profilepic" src={user.picture.medium}></img></span><br/>
       <span>Name  :{user.name.title} {user.name.first} {user.name.last}</span><br/>
       <span>Phone :{user.phone}</span><br/>
       <span>Email :{user.email}</span><br/>
-     
-      <hr/>
     </div>
   )
 }

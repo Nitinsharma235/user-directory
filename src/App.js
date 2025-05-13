@@ -11,6 +11,8 @@ function App() {
   const [error, setError] = useState(null);          // to show errors
   const [isDarkMode, setIsDarkMode] = useState(false);
   const hasFetched = useRef(false);
+  const [currentPage, setCurrentPage] = useState(1);
+
 
 
   const toggleTheme = () => {
@@ -28,7 +30,7 @@ function App() {
     );
   }
   function fetchData() {
-    fetch('https://randomuser.me/api/?results=10')
+    fetch(`https://randomuser.me/api/?results=10`)
       .then((response) =>{
         if(!response.ok){
             throw new Error(`HTTP error: ${response.status}`);
@@ -36,7 +38,8 @@ function App() {
           return  response.json()
         })
       .then(fetchedData =>{
-          setUsers([...fetchedData.results])
+          // setUsers(prev => [...prev, ...fetchedData.results])
+          setUsers([...users,...fetchedData.results])
         })
       .catch((error) => {
           setError(error.message)
@@ -46,10 +49,15 @@ function App() {
       });
   }
   useEffect (() =>{
-    if (hasFetched.current) return;
-    hasFetched.current = true;
+    // if (hasFetched.current) return;
+    // hasFetched.current = true;
     fetchData();
-   },[]);
+   },[currentPage]);
+
+   function searchData(name){
+      setSearch(name);
+      setCurrentPage(1);
+   }
         
   if (isLoading) {
     return <div>Loading........</div>;
@@ -66,9 +74,18 @@ function App() {
         {isDarkMode ? 'Light Mode' : 'Dark Mode'}
       </button>
       <button onClick={fetchData}>Refresh</button>
-      <SearchBar onFilter={setSearch}/><hr/>
-      <UserList userList={[...filterData()]} />
+      <SearchBar onFilter={searchData}/><hr/>
+      <UserList userList={[...filterData()].slice((currentPage-1)*10,currentPage*10)}/>
     </div> 
+      <button onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}>
+      Previous
+      </button> <h2>{currentPage}</h2>
+     
+      <button onClick={() => setCurrentPage(prev => prev + 1)}>
+      Next
+      </button>
+      
+
     </ThemeContext.Provider>
   );
 }
@@ -78,6 +95,13 @@ export default App;
 
 
 
+
+
+
+
+
+// https://randomuser.me/api/?page=${currentPage}&results=10&seed=abc123
+// [...fetchedData.results]
 // const tofetch = () => {
 //   setIsLoading(true); 
 //   setError(null);
